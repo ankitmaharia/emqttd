@@ -172,9 +172,13 @@ end}.
   {default, "log/error.log"},
   {datatype, file}
 ]}.
+{mapping, "log.info.file", "lager.handlers", [
+  {default, "log/error.log"},
+  {datatype, file}
+]}.
 
 {mapping, "log.syslog", "lager.handlers", [
-  {default,  off},
+  {default,  info},
   {datatype, flag}
 ]}.
 
@@ -189,7 +193,7 @@ end}.
 ]}.
 
 {mapping, "log.syslog.level", "lager.handlers", [
-  {default, err},
+  {default, info},
   {datatype, {enum, [debug, info, notice, warning, error, critical, alert, emergency]}}
 ]}.
 

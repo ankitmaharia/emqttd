@@ -131,6 +131,8 @@ init([]) ->
 
 handle_call({register_mod, Type, Mod, Opts, Seq}, _From, State) ->
     Mods = lookup_mods(Type),
+    io:display("Came to register"),
+    io:display(Type),
     Existed = lists:keyfind(Mod, 1, Mods),
     {reply, if_existed(Existed, fun() ->
                 case catch Mod:init(Opts) of
@@ -139,10 +141,14 @@ handle_call({register_mod, Type, Mod, Opts, Seq}, _From, State) ->
                                             Seq1 >= Seq2
                                     end, [{Mod, ModState, Seq} | Mods]),
                         ets:insert(?ACCESS_CONTROL_TAB, {tab_key(Type), NewMods}),
+                        io:display("Successfulyy registered: "),
+                        io:display(Type),
                         ok;
                     {error, Error} ->
+                        io:display(Error),
                         {error, Error};
                     {'EXIT', Reason} ->
+                        io:display(Reason),
                         {error, Reason}
                 end
             end), State};

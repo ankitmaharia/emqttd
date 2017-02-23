@@ -43,6 +43,7 @@ init() ->
 init_config(CfgFile) ->
     {ok, [AppsEnv]} = file:consult(CfgFile),
     lists:foreach(fun({AppName, Envs}) ->
+                      io:display(AppName),
                       [application:set_env(AppName, Par, Val) || {Par, Val} <- Envs]
                   end, AppsEnv).
 
@@ -140,6 +141,7 @@ load_plugin(#mqtt_plugin{name = Name}, Persistent) ->
         ok ->
             start_app(Name, fun(App) -> plugin_loaded(App, Persistent) end);
         {error, Error} ->
+            io:display(Error),
             {error, Error}
     end.
 
@@ -156,8 +158,8 @@ load_app(App) ->
 start_app(App, SuccFun) ->
     case application:ensure_all_started(App) of
         {ok, Started} ->
-            lager:info("started Apps: ~p", [Started]),
-            lager:info("load plugin ~p successfully", [App]),
+            lager:error("started Apps: ~p", [Started]),
+            lager:error("load plugin ~p successfully", [App]),
             SuccFun(App),
             {ok, Started};
         {error, {ErrApp, Reason}} ->
